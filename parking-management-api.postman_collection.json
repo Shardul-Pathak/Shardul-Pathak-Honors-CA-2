@@ -1,0 +1,343 @@
+{
+  "info": {
+    "_postman_id": "f5a7c29e-1d89-4c54-942b-7bfa168db60a",
+    "name": "Smart Parking Management System RESTful API",
+    "description": "Comprehensive Postman verification suite for Smart Parking Management System. Covers slot availability, booking entry, active occupancies, real-time fare calculation, vehicle checkout, and revenue analytics, as well as defensive error scenarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "activeBookingId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Slot Availability & Inspection",
+      "item": [
+        {
+          "name": "Check Real-Time Available Slots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/slots/available",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "slots", "available"]
+            },
+            "description": "Retrieves all parking slots that are currently AVAILABLE for booking."
+          },
+          "response": []
+        },
+        {
+          "name": "List All Parking Slots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/slots",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "slots"]
+            },
+            "description": "Retrieves all parking slots regardless of occupancy status."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Slot by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/slots/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "slots", "1"]
+            },
+            "description": "Fetch details of slot #1."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Booking & Billing Lifecycle",
+      "item": [
+        {
+          "name": "Allocate Slot on Vehicle Entry (Auto-Allocate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.id) {",
+                  "        pm.collectionVariables.set('activeBookingId', json.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleNumber\": \"MH-12-AB-1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/entry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "entry"]
+            },
+            "description": "Allocates the first available slot to vehicle MH-12-AB-1234 upon entry."
+          },
+          "response": []
+        },
+        {
+          "name": "Allocate Specific Slot on Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleNumber\": \"DL-01-XY-9999\",\n  \"slotId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/entry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "entry"]
+            },
+            "description": "Allocates designated slot #2 to vehicle DL-01-XY-9999."
+          },
+          "response": []
+        },
+        {
+          "name": "Fetch All Active Occupied Records",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "active"]
+            },
+            "description": "Retrieves all currently occupied parking records with PENDING payment status."
+          },
+          "response": []
+        },
+        {
+          "name": "Real-Time Fare Calculation (Accrued Charge)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/{{activeBookingId}}/fare",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "{{activeBookingId}}", "fare"]
+            },
+            "description": "Calculates real-time fee accrued at current time for the active booking."
+          },
+          "response": []
+        },
+        {
+          "name": "Checkout and Billing (Free Up Slot)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/{{activeBookingId}}/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "{{activeBookingId}}", "checkout"]
+            },
+            "description": "Finalizes vehicle exit, marks status COMPLETED, and frees up the occupied slot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Revenue & Analytics",
+      "item": [
+        {
+          "name": "Aggregate Revenue Report (Today)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/revenue",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analytics", "revenue"]
+            },
+            "description": "Fetches aggregate revenue for today's completed parking transactions."
+          },
+          "response": []
+        },
+        {
+          "name": "Aggregate Revenue Report for Specified Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/revenue?date=2026-10-28",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analytics", "revenue"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-10-28"
+                }
+              ]
+            },
+            "description": "Fetches aggregate revenue for 2026-10-28."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Defensive Error Scenarios",
+      "item": [
+        {
+          "name": "Validation Error - Blank Vehicle Number (400 Bad Request)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleNumber\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/entry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "entry"]
+            },
+            "description": "Asserts HTTP 400 when Jakarta Bean Validation fails."
+          },
+          "response": []
+        },
+        {
+          "name": "Conflict Error - Duplicate Vehicle Parked (409 Conflict)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleNumber\": \"DL-01-XY-9999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/entry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "entry"]
+            },
+            "description": "Asserts HTTP 409 when the same vehicle attempts to park while an active session exists."
+          },
+          "response": []
+        },
+        {
+          "name": "Not Found Error - Nonexistent Booking (404 Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings/999999/fare",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings", "999999", "fare"]
+            },
+            "description": "Asserts HTTP 404 when requested booking ID does not exist."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
