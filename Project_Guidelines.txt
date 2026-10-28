@@ -1,0 +1,93 @@
+Objectives
+
+
+build a complete RESTful backend service
+demonstrating clean architecture, defensive programming, and standard API
+design patterns.
+
+
+🛠️ Key Requirements & Functionalities
+
+
+Database
+& Persistence:
+
+
+    Configure
+    and connect to a relational database (PostgreSQL or MySQL).
+    Persist
+    parking slots, vehicle bookings, timestamps, and payment statuses using Spring
+    Data JPA.
+
+
+Core
+API Capabilities:
+
+
+    Slot
+    Availability: Check and retrieve
+    real-time available parking slots.
+    Slot
+    Booking: Allocate an available
+    slot to a vehicle upon entry.
+    Active
+    Records: Fetch details for all
+    currently occupied slots.
+    Checkout
+    & Billing: Process vehicle exit and
+    free up the allocated slot.
+
+
+Pricing
+& Analytics Rules:
+
+
+    Fee
+    Structure: Flat charge of ₹50 per
+    3 hours (or fraction thereof).
+
+    Example: 2
+    hours 15 mins = ₹50; 3 hours 5 mins = ₹100.
+
+
+Real-time
+Fare Calculation: Endpoint to calculate the
+total charge accrued at any given time.
+Revenue
+Reporting: Calculate and display
+aggregate revenue generated on a specified date.
+
+Robustness
+& Error Handling:
+
+
+    Validation:
+    Enforce validation on vehicle numbers, slot IDs, and timestamps using
+    Jakarta Bean Validation.
+    Global
+    Exception Handling: Use @RestControllerAdvice to return standardized
+    JSON error messages with appropriate HTTP status codes (400, 404, 409).
+
+
+
+
+
+📦 Submission
+Guidelines
+
+
+    Submission
+    Format: A Git repository link (GitHub/GitLab) or
+    a zipped project folder.
+    Included
+    Artifacts:
+
+    Clean,
+    modular source code (controller, service, repository, model, exception).
+    Database
+    schema/migration scripts (schema.sql or
+    Liquibase/Flyway).
+    API
+    verification files (Postman Collection or OpenAPI/Swagger configuration).
+    Basic
+    unit tests validating edge cases in the fee calculation engine.
