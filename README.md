@@ -10,7 +10,7 @@ A production-grade RESTful backend service demonstrating **Clean Architecture**,
 
 ---
 
-## 🏛️ Clean Architecture & Design Patterns
+## Clean Architecture & Design Patterns
 
 The codebase is organized into strict architectural boundaries:
 
@@ -31,7 +31,7 @@ src/main/java/com/rbu/parking
 
 ---
 
-## 🛠️ Key Architectural & Defensive Guarantees
+## Key Architectural & Defensive Guarantees
 
 1. **Defensive Concurrency & Locking:**
    - Optimistic concurrency control via `@Version` on `ParkingSlot` entity prevents double-booking race conditions when multiple vehicles request slots simultaneously.
@@ -50,7 +50,7 @@ src/main/java/com/rbu/parking
 
 ---
 
-## 💰 Pricing & Fare Calculation Engine
+## Pricing & Fare Calculation Engine
 
 ### Pricing Rule:
 > **Flat charge of ₹50 per 3 hours (or fraction thereof).**
@@ -69,7 +69,7 @@ src/main/java/com/rbu/parking
 
 ---
 
-## 📡 RESTful API Endpoints
+## RESTful API Endpoints
 
 ### 1. Slot Management
 | Method | Endpoint | Description | Status Code |
@@ -93,7 +93,7 @@ src/main/java/com/rbu/parking
 
 ---
 
-## 🗄️ Database & PostgreSQL Integration
+## Database & PostgreSQL Integration
 
 The service connects to PostgreSQL running in Docker (via container `prisma-postgres` on mapped host port `5433`):
 
@@ -107,7 +107,7 @@ The service connects to PostgreSQL running in Docker (via container `prisma-post
 
 ---
 
-## 🧪 Running Unit & Integration Tests
+## Running Unit & Integration Tests
 
 Execute the full suite of unit tests and integration tests via Maven wrapper:
 
@@ -121,7 +121,7 @@ Execute the full suite of unit tests and integration tests via Maven wrapper:
 
 ---
 
-## 🚀 Running the Application Locally
+## Running the Application Locally
 
 Ensure the Docker container is running:
 ```bash
@@ -139,7 +139,7 @@ Once running:
 
 ---
 
-## 📮 Postman Collection Verification
+## Postman Collection Verification
 
 A pre-configured Postman collection is included in the project root:
 - File: `parking-management-api.postman_collection.json`
